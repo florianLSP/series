@@ -21,7 +21,7 @@
         {% if loop.first %}
             <p>Première itération</p>
         {% endif %}
-        <div style="background: {{ color }}">{{ color }}</div>
+        <div style="color: {{ color }}">{{ color }}</div>
         <div>Position de l'élément {{ loop.index }} / {{ loop.length }}</div>
 
     {% endfor %}
