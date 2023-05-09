@@ -1,15 +1,51 @@
-<!doctype html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>test</title>
-</head>
-<body>
+{% extends 'base.html.twig' %}
 
-<h1>Test !</h1>
+{% block title %}
+    {{ parent() }} | Test
+{% endblock %}
 
-</body>
-</html>
+{% block body %}
+    <h1>Test !</h1>
+
+    {# Création de varaible #}
+    {% set name = "Eva" %}
+
+    {# affichage d'une variable #}
+    <h2>Bonjour {{ name }} !</h2>
+
+    {# affichage d'une variable #}
+    {% set colors = ['lightblue', 'pink', 'purple', 'darkred', 'green'] %}
+
+    {# affichage du tableau #}
+    {% for color in colors %}
+        {% if loop.first %}
+            <p>Première itération</p>
+        {% endif %}
+        <div style="background: {{ color }}">{{ color }}</div>
+        <div>Position de l'élément {{ loop.index }} / {{ loop.length }}</div>
+
+    {% endfor %}
+
+    {# Manipulation d'objet #}
+    {%
+        set serie = {
+        title : "Breaking Bad",
+        year : 2008
+    }
+    %}
+
+    {# On boucle sur l'ojet #}
+    <h3>Title : {{ serie.title }}</h3>
+    {% for key, val in serie %}
+        <p>{{key }} : {{ val }}</p>
+    {% endfor %}
+
+    {# quelques filtres ! #}
+    <h3>Filtres</h3>
+    <div>{{ name | upper }} : {{ name | length }} lettres</div>
+    <br>
+    <div>Colors : {{ colors | join('-') }}</div>
+    <br>
+    <div>{{ "now" | date('Y-m-d') }}</div>
+
+{% endblock %}
