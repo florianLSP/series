@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Test !</h1>
+    {# affichage d'une variable qui vient du controller #}
+    <h1>Bonjour {{ nameOfUser }}</h1>
+
+    <p>{{ serie.title }} : {{ serie.year }}</p><br>
 
     {# Création de varaible #}
     {% set name = "Eva" %}
@@ -22,22 +25,20 @@
             <p>Première itération</p>
         {% endif %}
         <div style="color: {{ color }}">{{ color }}</div>
-        <div>Position de l'élément {{ loop.index }} / {{ loop.length }}</div>
+        <div>Position de l'élément {{ loop.index }} / {{ loop.length }}</div><br>
 
     {% endfor %}
 
     {# Manipulation d'objet #}
-    {%
-        set serie = {
+    {% set serie = {
         title : "Breaking Bad",
         year : 2008
-    }
-    %}
+    } %}<br>
 
     {# On boucle sur l'ojet #}
     <h3>Title : {{ serie.title }}</h3>
     {% for key, val in serie %}
-        <p>{{key }} : {{ val }}</p>
+        <p>{{ key }} : {{ val }}</p>
     {% endfor %}
 
     {# quelques filtres ! #}
