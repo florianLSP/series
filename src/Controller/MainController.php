@@ -9,16 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     #[Route('/', name: 'main_home')]
-    /**
-     * @Route("/home", name="main_home2")
-     */
     public function home(): Response
     {
         return $this->render("main/home.html.twig");
 
     }
 
-    #[Route('/test', name: 'test')]
+    #[Route('/test', name: 'main_test')]
     public function test(): Response
     {
         return $this->render("main/test.html.twig");
