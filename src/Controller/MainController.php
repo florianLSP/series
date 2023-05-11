@@ -20,7 +20,7 @@ class MainController extends AbstractController
 
     #[Route('/test', name: 'main_test')]
     public function test(EntityManagerInterface $entityManager, SerieRepository $serieRepository): Response
-    {
+    {/*
         $serie = new Serie();
         $serie
             ->setBackdrop("backdrop.png")
@@ -55,9 +55,9 @@ class MainController extends AbstractController
                 $entityManager->flush();*/
 
         // en passant par le repository nouvelle version
-        $serieRepository->save($serie, true);
+        /*$serieRepository->save($serie, true);*/
 
-        dump($serie);
+        //dump($serie);*/
 
         $username = "Eva";
         $serie = ["title" => "La Chronique des Brigerton", "year" => 2020];

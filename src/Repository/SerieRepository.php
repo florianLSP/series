@@ -39,6 +39,35 @@ class SerieRepository extends ServiceEntityRepository
         }
     }
 
+    public function findBestSeries()
+    {
+        // en DQL
+/*        $entityManager = $this->getEntityManager();
+
+        $dql = "SELECT s FROM App\Entity\Serie as s
+                WHERE s.vote >= 8.4
+                AND s.popularity > 200
+                ORDER BY s.popularity DESC";
+
+        $query = $entityManager->createQuery($dql);
+        $query->setMaxResults(50);
+
+        return $query->getResult();*/
+
+        // avec le Query Builder
+        $qb = $this->createQueryBuilder('s');
+
+        $qb->andWhere('s.vote >= 8.5')
+            ->andWhere('s.popularity > 200')
+            ->addOrderBy('s.popularity', 'DESC');
+
+        $query = $qb->getQuery();
+        $query->setMaxResults(50);
+
+        return $query->getResult();
+
+    }
+
 //    /**
 //     * @return Serie[] Returns an array of Serie objects
 //     */

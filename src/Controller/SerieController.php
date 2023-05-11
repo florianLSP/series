@@ -12,18 +12,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class SerieController extends AbstractController
 {
     #[Route('', name: 'list')]
-    public function list(): Response
+    public function list(SerieRepository $serieRepository): Response
     {
-        // TODO renvoyer la liste des series
-        return $this->render('serie/list.html.twig');
+        //$series = $serieRepository->findBy([], ["popularity" => "DESC"], 50);
+        $series = $serieRepository->findBestSeries();
+        return $this->render('serie/list.html.twig', [
+            'series' => $series
+        ]);
     }
 
     #[Route('/{id}', name: 'show', requirements: ["id" => "\d+"])]
-    public function show(int $id): Response
+    public function show(int $id, SerieRepository $serieRepository): Response
     {
-        dump($id);
-        // TODO renvoyer le detail d'une serie
-        return $this->render('serie/show.html.twig');
+       $serie = $serieRepository->find($id);
+
+       if (!$serie){
+           throw  $this->createNotFoundException("The serie is not found...");
+       }
+
+
+        return $this->render('serie/show.html.twig', [
+            'serie' => $serie
+        ]);
     }
 
     #[Route('/add', name: 'add')]

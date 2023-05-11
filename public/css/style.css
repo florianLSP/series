@@ -44,6 +44,15 @@ a:hover {
 img {
     max-width: 100%;
     min-width: 140px;
+    box-shadow: #DDDDDD;
+    transition: transform .3s;
+}
+
+.series-list img:hover {
+    box-shadow: #e27f17 0 0 2px 2px;
+    -ms-transform: scale(1.1); /* IE 9 */
+    -webkit-transform: scale(1.1); /* Safari 3-8 */
+    transform: scale(1.1);
 }
 
 h1, h2, h3, h4 {
