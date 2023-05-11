@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Serie;
+use App\Repository\SerieRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,21 +30,10 @@ class SerieController extends AbstractController
     public function add(): Response
     {
         // TODO renvoyer un formulaire pour ajouter une nouvelle serie en bd
-        $serie = new Serie();
-        $serie
-            -> setBackdrop("backdrop.png")
-            -> setDateCreated(new\DateTime())
-            -> setGenres("Thriller/Drama")
-            ->setName("Utopia")
-            ->setFirstAirDate(new\DateTime("-2 year"))
-            ->setLastAirDate(new\DateTime("-2 month"))
-            ->setPopularity(500)
-            ->setPoster("poster.png")
-            ->setStatus("Canceled")
-            ->setTmdbId(123456)
-            ->setVote(5);
+
 
         return $this->render('serie/add.html.twig');
     }
+
 
 }
