@@ -3,25 +3,45 @@
 namespace App\Controller;
 
 use App\Entity\Serie;
+use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 #[Route('/series', name: 'serie_')]
 class SerieController extends AbstractController
 {
-    #[Route('', name: 'list')]
-    public function list(SerieRepository $serieRepository): Response
+    #[Route('/{page}', name: 'list', requirements: ["page" => "\d+"])]
+    public function list(int $page = 1, SerieRepository $serieRepository): Response
     {
-        //$series = $serieRepository->findBy([], ["popularity" => "DESC"], 50);
-        $series = $serieRepository->findBestSeries();
-        return $this->render('serie/list.html.twig', [
-            'series' => $series
-        ]);
+        //$series = $serieRepository->findBy([], ["popularity" => "DESC"], 55);
+        //$series = $serieRepository->findBestSeries();
+
+        $nbSeries = $serieRepository->count([]);
+        $maxPage = ceil($nbSeries / Serie::MAX_RESULT);
+
+        // page inférieur à 1
+        if ($page < 1) {
+            return $this -> redirectToRoute('serie_list', ['page' => 1]);;
+        // page superieur au max page
+        } else if ($page > $maxPage){
+            return $this->redirectToRoute('serie_list', ['page' => $maxPage]);
+        }else{
+
+            $series = $serieRepository->findSeriesWithPagination($page);
+
+            return $this->render('serie/list.html.twig', [
+                'series' => $series,
+                'currentPage' => $page,
+                'maxPage' => $maxPage
+            ]);
+        }
+
     }
 
-    #[Route('/{id}', name: 'show', requirements: ["id" => "\d+"])]
+    #[Route('/detail/{id}', name: 'show', requirements: ["id" => "\d+"])]
     public function show(int $id, SerieRepository $serieRepository): Response
     {
        $serie = $serieRepository->find($id);
@@ -37,13 +57,32 @@ class SerieController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
-    public function add(): Response
+    public function add(Request $request, SerieRepository $serieRepository): Response
     {
-        // TODO renvoyer un formulaire pour ajouter une nouvelle serie en bd
+        $serie = new Serie();
+        // instanciation du formulaire en lui passant l'instance de série
+        $serieform = $this->createForm(SerieType::class, $serie);
 
+        //permet d'extraire les données de la requete
+        $serieform->handleRequest($request);
 
-        return $this->render('serie/add.html.twig');
+        if ($serieform->isSubmitted()){
+
+            //traitement de la donnée
+            // récupération des champs non mapped
+            $genres = $serieform->get('genres')->getData();
+            $serie->setGenres(implode('/', $genres));
+            $serie -> setDateCreated(new \DateTime());
+
+            $serieRepository->save($serie, true);
+
+            // redirige vers la page de détail
+            $this->addFlash('success', 'Serie added !');
+            return $this->redirectToRoute('serie_show', ['id' => $serie->getId()]);
+        }
+        return $this->render('serie/add.html.twig', [
+            "serieform" => $serieform->createView()
+        ]);
     }
-
 
 }

@@ -57,8 +57,8 @@ class SerieRepository extends ServiceEntityRepository
         // avec le Query Builder
         $qb = $this->createQueryBuilder('s');
 
-        $qb->andWhere('s.vote >= 8.5')
-            ->andWhere('s.popularity > 200')
+        $qb->andWhere('s.vote >= 0')
+            ->andWhere('s.popularity > 0')
             ->addOrderBy('s.popularity', 'DESC');
 
         $query = $qb->getQuery();
@@ -66,6 +66,24 @@ class SerieRepository extends ServiceEntityRepository
 
         return $query->getResult();
 
+    }
+
+
+    public function findSeriesWithPagination(int $page){
+
+        $qb = $this->createQueryBuilder('s');
+        $qb->addOrderBy('s.popularity', 'DESC');
+
+        $query = $qb->getQuery();
+
+        // limit
+        $query->setMaxResults(Serie::MAX_RESULT);
+
+        // offset
+        $offset = ($page - 1) * Serie::MAX_RESULT;
+        $query->setFirstResult($offset);
+
+        return $query->getResult();
     }
 
 //    /**
