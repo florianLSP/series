@@ -38,7 +38,6 @@ class SerieController extends AbstractController
                 'maxPage' => $maxPage
             ]);
         }
-
     }
 
     #[Route('/detail/{id}', name: 'show', requirements: ["id" => "\d+"])]
@@ -50,7 +49,6 @@ class SerieController extends AbstractController
            throw  $this->createNotFoundException("The serie is not found...");
        }
 
-
         return $this->render('serie/show.html.twig', [
             'serie' => $serie
         ]);
@@ -61,16 +59,16 @@ class SerieController extends AbstractController
     {
         $serie = new Serie();
         // instanciation du formulaire en lui passant l'instance de série
-        $serieform = $this->createForm(SerieType::class, $serie);
+        $serieForm = $this->createForm(SerieType::class, $serie);
 
         //permet d'extraire les données de la requete
-        $serieform->handleRequest($request);
+        $serieForm->handleRequest($request);
 
-        if ($serieform->isSubmitted()){
+        if ($serieForm->isSubmitted()){
 
             //traitement de la donnée
             // récupération des champs non mapped
-            $genres = $serieform->get('genres')->getData();
+            $genres = $serieForm->get('genres')->getData();
             $serie->setGenres(implode('/', $genres));
             $serie -> setDateCreated(new \DateTime());
 
@@ -81,8 +79,19 @@ class SerieController extends AbstractController
             return $this->redirectToRoute('serie_show', ['id' => $serie->getId()]);
         }
         return $this->render('serie/add.html.twig', [
-            "serieform" => $serieform->createView()
+            "serieForm" => $serieForm->createView()
         ]);
     }
 
+    #[Route('/update/{id}', name: 'update', requirements: ["id" => "\d+"])]
+    public function update(int $id, SerieRepository $serieRepository){
+
+        $serie = $serieRepository->find($id);
+        $serieForm = $this->createForm(SerieType::class, $serie);
+
+        return $this-> render('serie/update.html.twig', [
+            'serieForm' => $serieForm->createView()
+            ]);
+
+    }
 }
