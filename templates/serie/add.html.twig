@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-    {%  embed 'views/form/serie_form.html.twig' %}
+    {%  embed 'views/form/default_form.html.twig' with {'form' : serieForm}%}
         {%  block h2 %} Add a new serie {% endblock %}
         {% block buttonLabel %}Add a new one {% endblock %}
     {% endembed %}

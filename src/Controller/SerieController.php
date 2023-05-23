@@ -90,8 +90,22 @@ class SerieController extends AbstractController
         $serieForm = $this->createForm(SerieType::class, $serie);
 
         return $this-> render('serie/update.html.twig', [
-            'serieForm' => $serieForm->createView()
+            'serieForm2' => $serieForm->createView()
             ]);
+
+    }
+
+    #[Route('/delete/{id}', name: 'delete', requirements: ["id" => "\d+"])]
+    public function delete(int $id, SerieRepository $serieRepository){
+
+        $serie = $serieRepository->find($id);
+
+        $serieRepository->remove($serie, true);
+
+        $this->addFlash('success', $serie->getName() . " has been removed !");
+
+        return $this->redirectToRoute('main_home');
+
 
     }
 }
