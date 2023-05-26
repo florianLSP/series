@@ -19,6 +19,11 @@
                 <div>Serie status : {{ serie.status }}</div>
                 <div>Aired from : {{ serie.firstAirDate | date('Y-m-d') }} to {{ serie.lastAirDate | date('Y-m-d') }}</div>
                 <div>{{ serie.overview | nl2br }}</div>
+                <div class="flex_div">
+                    <button value="1" class="like_button">Like</button>
+                    <button value="0" class="like_button">Dislike</button>
+                    <div><span id="nbLike">{{ serie.nbLike }}</span> likes</div>
+                </div>
             </div>
 
         </div>
@@ -52,5 +57,29 @@
         }
     </style>
 
+{% endblock %}
+
+{% block extraJs %}
+    <script>
+        let buttons = Array.from(document.getElementsByClassName('like_button'))
+
+        console.log(buttons)
+
+        buttons.forEach(function (button){
+            console.log(button)
+
+            button.addEventListener("click", function (){
+                let value = {'value' : this.value}
+
+                fetch("{{ path('api_serie_update_one', {'id' : serie.id}) }}",
+                    {method : 'PUT', body : JSON.stringify(value)})
+                    .then(function(response){
+                        return response.json()}
+                    ).then(function(data){
+                        document.getElementById('nbLike').innerText = data.nbLike
+                    })
+            })
+        })
+    </script>
 {% endblock %}
 
